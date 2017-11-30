@@ -29,6 +29,7 @@ LAYER_URI_RECEIPTS = 'receipts'
 LAYER_URI_USERS = 'users'
 LAYER_URI_USERS_IDENTITY = 'identity'
 LAYER_URI_USERS_BADGE = 'badge'
+LAYER_URI_USERS_BLOCKS = 'blocks'
 
 
 def safe_unicode(string):
@@ -461,6 +462,44 @@ class PlatformClient(object):
                 LAYER_URI_USERS_IDENTITY
             )
         ))
+
+    def get_user_blocks(self, user_id):
+        return self._raw_request(
+            METHOD_GET,
+            self._get_layer_uri(
+                LAYER_URI_USERS,
+                user_id,
+                LAYER_URI_USERS_BLOCKS
+            )
+        )
+
+    def user_blocks(self, user_id, block_user_id):
+        return self._raw_request(
+            METHOD_PATCH,
+            self._get_layer_uri(
+                LAYER_URI_USERS,
+                user_id
+            ),
+            [{
+                'operation': 'add',
+                'property': 'blocks',
+                'id': 'layer:///identities/' + block_user_id
+            }]
+        )
+
+    def user_unblocks(self, user_id, blocked_user_id):
+        return self._raw_request(
+            METHOD_PATCH,
+            self._get_layer_uri(
+                LAYER_URI_USERS,
+                user_id
+            ),
+            [{
+                'operation': 'remove',
+                'property': 'blocks',
+                'id': 'layer:///identities/' + blocked_user_id
+            }]
+        )
 
     def prepare_rich_content(self, conversation, content_type, content_size):
         """
