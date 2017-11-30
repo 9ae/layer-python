@@ -426,6 +426,25 @@ class PlatformClient(object):
             }
         )
 
+    def create_identity(self, user_id, name):
+        '''
+        Create user identity
+
+        :param user_id
+        :return request
+        '''
+        return self._raw_request(
+            METHOD_POST,
+            self._get_layer_uri(
+                LAYER_URI_USERS,
+                user_id,
+                LAYER_URI_USERS_IDENTITY
+            ),
+            {
+                'display_name': name
+            }
+        )
+
     def get_identity(self, user_id):
         '''
         Updates metadata of conversation
